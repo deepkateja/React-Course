@@ -4,6 +4,7 @@ import {Navbar,NavbarBrand} from 'reactstrap';
 import './App.css';
 import Menu from './Components/MenuComponents';
 import {DISHES} from './shared/dishes';
+import DishetailComponent from './Components/DishdetailComponent';
 
 class App extends React.Component  {
   constructor(props){
@@ -21,6 +22,7 @@ class App extends React.Component  {
        </div>
        </Navbar> 
        <Menu dishes = {this.state.dishes}/>
+       <DishetailComponent dish = {this.state.dishes}/>
    </div>
   );
 }
