@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Row, Col, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
-   function RenderComments({comments}) {
+
+   function RenderComments({comments, addComment, dishId}) {
         if (comments == null) {
             return (<div></div>)
         }
@@ -23,6 +25,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
                 <h4> Comments </h4>
                 <ul className='list-unstyled'>
                     {cmnts}
+                    <CommentForm dishId={dishId} addComment={addComment} />
                 </ul>
                 </div>
             
@@ -52,11 +55,29 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 
     var Dishdetail = (props) => {
        const dish = props.dish
-        if (dish == null) {
+       if (props.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    } else if (props.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+       else  if (dish == null) {
             return (<div></div>)
         }
         const dishItem = <RenderDish dish = {props.dish}/>
-        const commentItem = <RenderComments comments = {props.comments}/>
+        const commentItem = <RenderComments comments = {props.comments} addComment={props.addComment}
+        dishId={props.dish.id}/>
         return (
             <div className = 'container'>
             <div className="row">
@@ -79,7 +100,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
                 {dishItem}</div>
                 <div className='col-12 col-md-5 m-1'>
                 {commentItem}
-                <CommentForm/>
+                
                 </div>
             </div>
             </div>
@@ -112,8 +133,7 @@ export class CommentForm extends Component {
     handleSubmit(values){
         this.toggleModal();
 
-        console.log('comment:', values);
-        alert('comment:' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
