@@ -44,7 +44,7 @@ function About(props) {
             <Media list>
                 <Stagger in>
                 {leaders}
-                </Stagger>
+                </Stagger>  
             </Media>
         );
     }
